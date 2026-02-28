@@ -1,0 +1,13 @@
+id,title,description,priority,task_type,assigned_time,duration_minutes,reminder_minutes_before,status,completed_at
+1,Morning workout,Cardio and stretches,4,health,2026-01-01T06:30:00,45,10,completed,2026-01-01T06:35:00
+2,Deep work sprint,Product planning,5,work,2026-01-01T09:00:00,90,15,completed,2026-01-01T09:10:00
+3,Read research paper,ML notes,3,study,2026-01-01T14:00:00,60,10,pending,
+4,Evening review,Daily reflection,2,personal,2026-01-01T20:00:00,20,5,completed,2026-01-01T20:05:00
+5,Code practice,LeetCode medium,4,study,2026-01-02T18:00:00,50,10,completed,2026-01-02T18:20:00
+6,Inbox cleanup,Email triage,2,work,2026-01-02T11:00:00,30,5,pending,
+7,Project design,Architecture draft,5,work,2026-01-03T10:00:00,120,20,completed,2026-01-03T10:30:00
+8,Walk,Outdoor break,1,health,2026-01-03T16:00:00,30,5,completed,2026-01-03T16:02:00
+9,Language learning,Spanish app,3,personal,2026-01-04T19:00:00,40,10,completed,2026-01-04T19:05:00
+10,Weekly planning,Plan upcoming week,5,work,2026-01-05T08:00:00,60,15,completed,2026-01-05T08:15:00
+11,Reading,Book chapter,2,study,2026-01-06T21:00:00,30,5,completed,2026-01-06T21:20:00
+12,Meal prep,Healthy meals,3,health,2026-01-07T17:00:00,70,10,completed,2026-01-07T17:10:00
