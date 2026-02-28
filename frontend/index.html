@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Daily Routine Optimizer — AI-powered productivity app that learns your patterns and optimizes your schedule.">
+    <title>Daily Routine Optimizer</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <!-- ─── App Shell ────────────────────────────────────────────── -->
+    <div class="app-container">
+
+        <!-- ─── Sidebar Navigation ───────────────────────────────── -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">RoutineAI</span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li>
+                    <a href="#dashboard" class="nav-link active" data-page="dashboard" id="nav-dashboard">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#tasks" class="nav-link" data-page="tasks" id="nav-tasks">
+                        <span class="nav-icon">✅</span>
+                        <span class="nav-label">Tasks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#calendar" class="nav-link" data-page="calendar" id="nav-calendar">
+                        <span class="nav-icon">📅</span>
+                        <span class="nav-label">Calendar</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#analytics" class="nav-link" data-page="analytics" id="nav-analytics">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-label">Analytics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#suggestions" class="nav-link" data-page="suggestions" id="nav-suggestions">
+                        <span class="nav-icon">🤖</span>
+                        <span class="nav-label">AI Suggestions</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-info">
+                    <span class="info-label">Powered by ML</span>
+                    <span class="info-badge" id="model-status">●</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ─── Main Content Area ────────────────────────────────── -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">☰</button>
+                <h1 class="page-title" id="page-title">Dashboard</h1>
+                <div class="top-bar-actions">
+                    <button class="btn btn-primary" id="btn-add-task" aria-label="Add task">
+                        <span>+</span> New Task
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Container (views rendered here) -->
+            <div class="page-container" id="page-container">
+                <!-- Views are injected here by JavaScript -->
+                <div class="loading-screen" id="loading-screen">
+                    <div class="spinner"></div>
+                    <p>Loading your productivity data...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ─── Add/Edit Task Modal ──────────────────────────────────── -->
+    <div class="modal-overlay" id="task-modal-overlay">
+        <div class="modal" id="task-modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Add New Task</h2>
+                <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="task-form" class="modal-body">
+                <input type="hidden" id="task-id">
+
+                <div class="form-group">
+                    <label for="task-title">Title *</label>
+                    <input type="text" id="task-title" required maxlength="200" placeholder="e.g., Morning workout">
+                </div>
+
+                <div class="form-group">
+                    <label for="task-description">Description</label>
+                    <textarea id="task-description" rows="2" maxlength="2000" placeholder="Optional details..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-category">Category</label>
+                        <select id="task-category">
+                            <option value="general">General</option>
+                            <option value="work">Work</option>
+                            <option value="health">Health</option>
+                            <option value="personal">Personal</option>
+                            <option value="learning">Learning</option>
+                            <option value="errands">Errands</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-priority">Priority</label>
+                        <select id="task-priority">
+                            <option value="1">1 — Low</option>
+                            <option value="2" selected>2 — Medium</option>
+                            <option value="3">3 — High</option>
+                            <option value="4">4 — Urgent</option>
+                            <option value="5">5 — Critical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-time">Scheduled Time</label>
+                        <input type="datetime-local" id="task-time">
+                    </div>
+                    <div class="form-group">
+                        <label for="task-duration">Duration (min)</label>
+                        <input type="number" id="task-duration" value="30" min="1" max="480">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-reminder">Reminder (min before)</label>
+                    <input type="number" id="task-reminder" value="10" min="0" max="120">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" id="modal-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ─── Toast Notifications ──────────────────────────────────── -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ─── Scripts ──────────────────────────────────────────────── -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+    <script src="/static/js/tasks.js"></script>
+    <script src="/static/js/calendar.js"></script>
+    <script src="/static/js/analytics.js"></script>
+    <script src="/static/js/suggestions.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

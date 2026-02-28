@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+*.whl
+
+# Virtual environment
+venv/
+.env/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database
+*.db
+
+# ML artifacts (regeneratable)
+backend/data/sample_tasks.csv
+backend/ml/model.pkl
+backend/ml/model_summary.json
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test artifacts
+test_*.db
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Logs
+*.log
