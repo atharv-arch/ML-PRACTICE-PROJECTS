@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--
+        Daily Routine Optimizer — Mobile App Entry Point
+        ─────────────────────────────────────────────────
+        This is the Capacitor (mobile) version of index.html.
+        
+        Key differences from the web version:
+        1. Asset paths are relative (./css/, ./js/) instead of /static/
+        2. APP_CONFIG.backendUrl MUST be set to your deployed server
+        3. Includes Capacitor.js for native bridge access
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RoutineAI — Daily Routine Optimizer</title>
+
+    <!-- Google Fonts — Inter for clean, modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Chart.js — charting library for productivity visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!--
+        Mobile Backend Configuration
+        ────────────────────────────
+        IMPORTANT: For the mobile app to work, you MUST set backendUrl
+        to your deployed FastAPI server URL. The mobile app cannot use
+        relative paths because it runs from the device filesystem,
+        not from a web server.
+        
+        Steps:
+        1. Deploy your backend to Render, Railway, or similar
+        2. Set the URL below (no trailing slash)
+        3. Rebuild with: npx cap sync android
+    -->
+    <script>
+        window.APP_CONFIG = {
+            // REQUIRED: Set this to your deployed backend URL
+            // Example: 'https://routine-optimizer.onrender.com'
+            backendUrl: 'http://10.0.2.2:8000',  // Android emulator → host machine
+        };
+    </script>
+
+    <!-- Styles — relative path for Capacitor bundling -->
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <!-- ── Sidebar Navigation ──────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar">
+        <!-- App branding -->
+        <div class="sidebar-brand">
+            <span class="brand-icon">⚡</span>
+            <span class="brand-text">RoutineAI</span>
+        </div>
+
+        <!-- Navigation links — data-page drives the SPA router -->
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="nav-link active" data-page="dashboard">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="#tasks" class="nav-link" data-page="tasks">
+                <span class="nav-icon">✅</span>
+                <span class="nav-text">Tasks</span>
+            </a>
+            <a href="#calendar" class="nav-link" data-page="calendar">
+                <span class="nav-icon">📅</span>
+                <span class="nav-text">Calendar</span>
+            </a>
+            <a href="#analytics" class="nav-link" data-page="analytics">
+                <span class="nav-icon">📈</span>
+                <span class="nav-text">Analytics</span>
+            </a>
+            <a href="#suggestions" class="nav-link" data-page="suggestions">
+                <span class="nav-icon">🤖</span>
+                <span class="nav-text">AI Suggestions</span>
+            </a>
+        </nav>
+
+        <!-- Sidebar footer showing ML status -->
+        <div class="sidebar-footer">
+            <span>Powered by ML</span>
+            <span class="status-dot online"></span>
+        </div>
+    </aside>
+
+    <!-- ── Main Content Area ───────────────────────────────────── -->
+    <main class="main-content">
+        <!-- Top bar with page title and action buttons -->
+        <header class="top-bar">
+            <!-- Mobile hamburger menu toggle -->
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">☰</button>
+            <h1 class="page-title" id="page-title">Dashboard</h1>
+            <div class="top-bar-actions">
+                <button class="btn btn-primary" id="btn-add-task">+ New Task</button>
+            </div>
+        </header>
+
+        <!-- Dynamic page container — views are rendered here by app.js -->
+        <div class="page-container" id="page-container">
+            <!-- Loading spinner shown while view fetches data -->
+            <div class="loading-screen">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ── Task Modal (shared across all views) ────────────────── -->
+    <div class="modal-overlay" id="task-modal-overlay">
+        <div class="modal">
+            <!-- Modal header with title and close button -->
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Add New Task</h2>
+                <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+
+            <!-- Task creation/edit form -->
+            <form id="task-form">
+                <!-- Hidden field to store task ID when editing -->
+                <input type="hidden" id="task-id">
+
+                <!-- Task title — required field -->
+                <div class="form-group">
+                    <label for="task-title">Title</label>
+                    <input type="text" id="task-title" placeholder="What needs to be done?" required>
+                </div>
+
+                <!-- Task description — optional details -->
+                <div class="form-group">
+                    <label for="task-description">Description</label>
+                    <textarea id="task-description" rows="2" placeholder="Add details..."></textarea>
+                </div>
+
+                <!-- Category and priority row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-category">Category</label>
+                        <select id="task-category">
+                            <option value="work">🏢 Work</option>
+                            <option value="health">🏃 Health</option>
+                            <option value="personal">🏠 Personal</option>
+                            <option value="learning">📚 Learning</option>
+                            <option value="errands">🛒 Errands</option>
+                            <option value="general">📋 General</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-priority">Priority</label>
+                        <select id="task-priority">
+                            <option value="1">1 - Low</option>
+                            <option value="2" selected>2 - Normal</option>
+                            <option value="3">3 - Medium</option>
+                            <option value="4">4 - High</option>
+                            <option value="5">5 - Critical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Time, duration, and reminder row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-time">Scheduled Time</label>
+                        <input type="datetime-local" id="task-time">
+                    </div>
+                    <div class="form-group">
+                        <label for="task-duration">Duration (min)</label>
+                        <input type="number" id="task-duration" value="30" min="5" max="480">
+                    </div>
+                    <div class="form-group">
+                        <label for="task-reminder">Reminder (min before)</label>
+                        <input type="number" id="task-reminder" value="10" min="0" max="120">
+                    </div>
+                </div>
+
+                <!-- Modal action buttons -->
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" id="modal-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── Toast Notification Container ────────────────────────── -->
+    <!-- Toasts appear here (bottom-right) and auto-dismiss -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!--
+        JavaScript Modules — loaded in dependency order:
+        1. api.js      → API client (no dependencies)
+        2. dashboard.js → Dashboard view
+        3. tasks.js     → Tasks view
+        4. calendar.js  → Calendar view
+        5. analytics.js → Analytics view
+        6. suggestions.js → AI suggestions view
+        7. app.js       → SPA router (depends on all views)
+    -->
+    <script src="./js/api.js"></script>
+    <script src="./js/dashboard.js"></script>
+    <script src="./js/tasks.js"></script>
+    <script src="./js/calendar.js"></script>
+    <script src="./js/analytics.js"></script>
+    <script src="./js/suggestions.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+
+</html>

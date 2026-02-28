@@ -1,22 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Daily Routine Optimizer — AI-powered productivity app that learns your patterns and optimizes your schedule.">
+    <meta name="description"
+        content="Daily Routine Optimizer — AI-powered productivity app that learns your patterns and optimizes your schedule.">
     <title>Daily Routine Optimizer</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
-    <!-- Chart.js -->
+    <!-- Chart.js — charting library for productivity visualizations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <!-- Styles -->
+    <!--
+        App Configuration for Mobile Deployment
+        ─────────────────────────────────────────
+        When running as a native mobile app (via Capacitor), the frontend
+        needs to know where the backend API lives. Set backendUrl to your
+        deployed server (e.g., Render, Railway, or your own server).
+
+        For local development (web), leave backendUrl empty — the app
+        will use relative URLs which route to the same FastAPI server.
+    -->
+    <script>
+        window.APP_CONFIG = {
+            // Set this to your deployed backend URL for mobile builds
+            // Example: 'https://routine-optimizer.onrender.com'
+            backendUrl: '',
+        };
+    </script>
+
+    <!-- Styles — Premium dark glassmorphism design system -->
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
+
 <body>
     <!-- ─── App Shell ────────────────────────────────────────────── -->
     <div class="app-container">
@@ -112,7 +134,8 @@
 
                 <div class="form-group">
                     <label for="task-description">Description</label>
-                    <textarea id="task-description" rows="2" maxlength="2000" placeholder="Optional details..."></textarea>
+                    <textarea id="task-description" rows="2" maxlength="2000"
+                        placeholder="Optional details..."></textarea>
                 </div>
 
                 <div class="form-row">
@@ -175,4 +198,5 @@
     <script src="/static/js/suggestions.js"></script>
     <script src="/static/js/app.js"></script>
 </body>
+
 </html>

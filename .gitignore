@@ -41,3 +41,12 @@ htmlcov/
 
 # Logs
 *.log
+
+# Node
+node_modules/
+
+# Android build artifacts
+frontend/android/.gradle/
+frontend/android/app/build/
+frontend/android/build/
+frontend/android/local.properties

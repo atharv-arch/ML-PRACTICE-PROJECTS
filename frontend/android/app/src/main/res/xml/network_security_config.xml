@@ -1,0 +1,37 @@
+<!--
+    Android Network Security Configuration
+    ───────────────────────────────────────
+    
+    This file controls what network connections the app is allowed to make.
+    
+    By default, Android blocks cleartext (HTTP) traffic for security.
+    During development, we need HTTP to connect to the local backend.
+    
+    For production:
+      - Remove the <domain-config> section
+      - Use only HTTPS for your deployed backend
+    
+    For development:
+      - 10.0.2.2 = Android emulator's alias for host machine's localhost
+      - Add your machine's LAN IP if testing on a physical device
+-->
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Default: allow cleartext HTTP traffic for development -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!-- Trust the system CA certificates -->
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!--
+        Domain-specific config for local development.
+        10.0.2.2 is the Android emulator's alias for localhost.
+        Add your LAN IP here for testing on physical devices.
+    -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <domain includeSubdomains="true">localhost</domain>
+    </domain-config>
+</network-security-config>
