@@ -10,3 +10,6 @@ Steps:
 - Train Test Split
 - Logistic Regression Model
 - Confusion Matrix
+- KNN
+- Decision tree
+- random forest
