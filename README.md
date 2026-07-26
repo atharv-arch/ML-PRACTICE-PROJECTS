@@ -14,3 +14,5 @@ A classification model that predicts whether a tumor is benign or malignant.
 An AI-powered productivity system with backend, frontend and ML modules.
 ### Spam email classifier
 a machine llearning model that classifies wheather email is spam or not
+### Movie recommendation project
+a machine learning model which recommends movie based on the movie you searched
